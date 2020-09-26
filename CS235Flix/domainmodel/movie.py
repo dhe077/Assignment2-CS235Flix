@@ -5,7 +5,7 @@ from domainmodel.director import Director
 
 class Movie:
 
-    def __init__(self, movie_name: str, year: int):
+    def __init__(self, movie_name: str, year: int, id: int):
         if movie_name == "" or type(movie_name) is not str:
             self.__title = None
         else:
@@ -16,14 +16,16 @@ class Movie:
             self.__release_year = None
         self.__description: str = ""
         self.__director: Director = None
-        self.__actors: list = []
-        self.__genres: list = []
+        self.__actors: list = list()
+        self.__genres: list = list()
         self.__runtime_minutes: int = 0
 
         self.__external_rating = 0
         self.__rating_votes = 0
         self.__revenue = None
         self.__metascores = None
+
+        self.__ID: int = id
 
     # property mechanism of title, description, director, actors, genres,
     # runtime, external_rating, revenue and metascores
@@ -119,13 +121,21 @@ class Movie:
             if int(new_metascores) >= 0:
                 self.__metascores = int(new_metascores)
 
+    @property
+    def ID(self) -> int:
+        return self.__ID
+
+    @ID.setter
+    def ID(self, new_ID: int):
+        self.__ID = new_ID
+
     # add external rating, rating votes, revenue and meta scores as extra
 
     def __repr__(self) -> str:
         return f"<Movie {self.__title}, {self.__release_year}>"
 
     def __eq__(self, other):
-        if self.__title == other.title and self.__release_year == other.__release_year:
+        if self.__title == other.title and self.__release_year == other.__release_year and self.__ID == other.__ID:
             return True
         return False
 
@@ -162,7 +172,7 @@ class Movie:
 class TestMovieMethods:
 
     def test_init(self):
-        movie = Movie("Moana", 2016)
+        movie = Movie("Moana", 2016, 7)
         print(movie)
 
         director = Director("Ron Clements")
@@ -178,9 +188,9 @@ class TestMovieMethods:
         print("Movie runtime: {} minutes".format(movie.runtime_minutes))
 
     def test_hash(self):
-        movie1 = Movie("Moana1", 2016)
-        movie2 = Movie("Moana2", 2016)
-        movie3 = Movie("Moana3", 2016)
+        movie1 = Movie("Moana1", 2016, 1)
+        movie2 = Movie("Moana2", 2016, 2)
+        movie3 = Movie("Moana3", 2016, 3)
 
         test_set = set()
         test_set.add(movie1)
@@ -191,7 +201,7 @@ class TestMovieMethods:
 
     # extension test
     def test_add_rating_vote(self):
-        movie = Movie("Moana", 2016)
+        movie = Movie("Moana", 2016, 7)
         movie.rating_votes = 5
         movie.external_rating = 6.2
         movie.add_rating_vote(8)
@@ -199,41 +209,48 @@ class TestMovieMethods:
         print(f"Number of votes: {movie.rating_votes}")
         print(f"New rating for the movie: {movie.external_rating}")
         assert movie.external_rating == 6.5
-        movie2 = Movie("ABC", 2016)
+        movie2 = Movie("ABC", 2016, 2)
         movie2.rating_votes = "2"
         movie2.external_rating = "2.5"
         movie2.add_rating_vote(10)
         assert movie2.external_rating == 5
-        movie3 = Movie("", 0)
+        movie3 = Movie("", 0, 5)
         movie3.rating_votes = -1
         movie3.external_rating = "-2"
         movie3.add_rating_vote(10)
         assert movie3.external_rating == 10
 
     def test_revenue(self):
-        movie = Movie("Moana", 2016)
+        movie = Movie("Moana", 2016, 7)
         movie.revenue = "23.6"
         assert movie.revenue == 23.6
-        movie1 = Movie("Up", 2009)
+        movie1 = Movie("Up", 2009, 8)
         movie1.revenue = "N/A"
         assert movie1.revenue is None
-        movie2 = Movie("", 0)
+        movie2 = Movie("", 0, 1)
         movie2.revenue = 41.5
         assert movie2.revenue == 41.5
-        movie3 = Movie("", 0)
+        movie3 = Movie("", 0, 1)
         movie3.revenue = -2
         assert movie3.revenue is None
 
     def test_metascores(self):
-        movie = Movie("Moana", 2016)
-        movie.revenue = "23"
+        movie = Movie("Moana", 2016, 7)
+        movie.metascores = "23"
         assert movie.metascores == 23
-        movie1 = Movie("Up", 2009)
+        movie1 = Movie("Up", 2009, 8)
         movie1.revenue = "N/A"
         assert movie1.metascores is None
-        movie2 = Movie("", 0)
-        movie2.revenue = 41
+        movie2 = Movie("", 0, 1)
+        movie2.metascores = 41
         assert movie2.metascores == 41
-        movie3 = Movie("", 0)
-        movie3.revenue = -2
+        movie3 = Movie("", 0, 1)
+        movie3.metascores = -2
         assert movie3.metascores is None
+
+    def test_ID(self):
+        movie = Movie("Moana", 2016, 7)
+        movie2 = Movie("Moana", 2016, 7)
+        assert movie == movie2
+        movie3 = Movie("Moana", 2016, 8)
+        assert movie != movie3
