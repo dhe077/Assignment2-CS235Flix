@@ -1,27 +1,41 @@
+from typing import List
+from domainmodel.movie import Movie
+from domainmodel.user import User
+from domainmodel.director import Director
+from domainmodel.genre import Genre
+from domainmodel.actor import Actor
+from domainmodel.repository import AbstractRepository, RepositoryException
+
 
 class MemoryRepository(AbstractRepository):
 
     def __init__(self):
         self._movies = list()
-        self._movies_index = dict()
+        self._movies_ids = dict()
         self._users = list()
 
     def add_user(self, user: User):
         self._users.append(user)
 
     def get_user(self, username):
-        return (user for user in self._user if user == username)
+        for user in self._users:
+            if user.user_name == username.lower():
+                return user
 
     def add_movie(self, movie: Movie):
-        insort_left(self._movies, movie)
-        self._movies_index[movie.ID] = movie
+        if movie.ID not in self._movies_ids:
+            self._movies.append(movie)
+            self._movies_ids[movie.ID] = movie
+        else:
+            raise KeyError
 
     def get_movie(self, id):
         movie = None
         try:
-            movie = self._movies_index[id]
+            movie = self._movies_ids[id]
         except KeyError:
             pass
+        return movie
 
     def get_number_of_movies(self) -> int:
         return len(self._movies)
@@ -36,13 +50,13 @@ class MemoryRepository(AbstractRepository):
         movies_by_id = list()
         for movie in self._movies:
             if movie.ID in ID_list:
-                movies.append(movie)
+                movies_by_id.append(movie)
         return movies_by_id
 
-    def get_movies_by_title(self, keyword) -> List[Movie]:
+    def get_movies_by_title(self, keyword: List[str]) -> List[Movie]:
         movies_by_title = list()
         for movie in self._movies:
-            if keyword in movie.title:
+            if movie.title in keyword:
                 movies_by_title.append(movie)
         return movies_by_title
 
@@ -70,26 +84,36 @@ class MemoryRepository(AbstractRepository):
     def get_movies_by_rating_high(self) -> List[Movie]:
         high_to_low_movies = list()
         # find the highest rating movie then work your way down to the lowest
-        copy_of_movies = self._movies.copy()
-        highest = copy_of_movies[0]
-        while len(copy_of_movies) != 0:
-            for i in range(len(copy_of_movies)):
-                if copy_of_movies[i].external_rating > highest.external_rating:
-                    highest = copy_of_movies.pop(i)
-            high_to_low_movies.append(highest)
+        visited = []
+        index = 0
+        while len(visited) != len(self._movies):
+            highest = None
+            for i in range(len(self._movies)):
+                if i not in visited:
+                    if highest is None or self._movies[i].external_rating > highest.external_rating:
+                        highest = self._movies[i]
+                        index = i
+            if index not in visited:
+                visited.append(index)
+                high_to_low_movies.append(highest)
         return high_to_low_movies
 
     def get_movies_by_rating_low(self) -> List[Movie]:
         low_to_high_movies = list()
         # find the lowest rating movie then work your way up to the highest
-        copy_of_movies = self._movies.copy()
-        lowest = copy_of_movies[0]
-        while len(copy_of_movies) != 0:
-            for i in range(len(copy_of_movies)):
-                if copy_of_movies[i].external_rating < lowest.external_rating:
-                    highest = copy_of_movies.pop(i)
-            high_to_low_movies.append(lowest)
-        return high_to_low_movies
+        visited = []
+        index = 0
+        while len(visited) != len(self._movies):
+            lowest = None
+            for i in range(len(self._movies)):
+                if i not in visited:
+                    if lowest is None or self._movies[i].external_rating < lowest.external_rating:
+                        lowest = self._movies[i]
+                        index = i
+            if index not in visited:
+                visited.append(index)
+                low_to_high_movies.append(lowest)
+        return low_to_high_movies
 
     def get_title_of_previous_movie(self, movie: Movie):
         pass

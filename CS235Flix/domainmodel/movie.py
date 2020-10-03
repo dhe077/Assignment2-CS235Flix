@@ -182,10 +182,19 @@ class TestMovieMethods:
         actors = [Actor("Auli'i Cravalho"), Actor("Dwayne Johnson"), Actor("Rachel House"), Actor("Temuera Morrison")]
         for actor in actors:
             movie.add_actor(actor)
-        print(movie.actors)
+        assert movie.actors == [Actor("Auli'i Cravalho"), Actor("Dwayne Johnson"), Actor("Rachel House"),
+                                Actor("Temuera Morrison")]
+        assert len(movie.actors) == 4
 
         movie.runtime_minutes = 107
         print("Movie runtime: {} minutes".format(movie.runtime_minutes))
+
+    def test_add_actor(self):
+        movie = Movie("Moana", 2016, 1)
+        movie.add_actor(Actor("Dwayne Johnson"))
+
+        assert len(movie.actors) == 1
+        assert movie.actors == [Actor("Dwayne Johnson")]
 
     def test_hash(self):
         movie1 = Movie("Moana1", 2016, 1)

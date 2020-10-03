@@ -1,4 +1,19 @@
 import abc
+from typing import List
+from domainmodel.movie import Movie
+from domainmodel.user import User
+from domainmodel.director import Director
+from domainmodel.genre import Genre
+from domainmodel.actor import Actor
+
+
+repo_instance = None
+
+
+class RepositoryException(Exception):
+
+    def __init__(self, message=None):
+        pass
 
 
 class AbstractRepository(abc.ABC):
@@ -73,7 +88,7 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_movies_by_rating_high(self) ->List[Movie]:
+    def get_movies_by_rating_high(self) -> List[Movie]:
         """ Returns a list of Movie, from high to low rating, from the repository.
             If there are no Movies in the repository then this method returns an empty list. """
         raise NotImplementedError
