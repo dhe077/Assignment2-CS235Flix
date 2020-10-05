@@ -1,10 +1,12 @@
 from typing import List
-from domainmodel.movie import Movie
-from domainmodel.user import User
-from domainmodel.director import Director
-from domainmodel.genre import Genre
-from domainmodel.actor import Actor
-from domainmodel.repository import AbstractRepository, RepositoryException
+from bisect import bisect, bisect_left, insort_left
+
+from CS235Flix.domainmodel.movie import Movie
+from CS235Flix.domainmodel.user import User
+from CS235Flix.domainmodel.director import Director
+from CS235Flix.domainmodel.genre import Genre
+from CS235Flix.domainmodel.actor import Actor
+from CS235Flix.repositorydir.repository import AbstractRepository, RepositoryException
 
 
 class MemoryRepository(AbstractRepository):
@@ -24,10 +26,10 @@ class MemoryRepository(AbstractRepository):
 
     def add_movie(self, movie: Movie):
         if movie.ID not in self._movies_ids:
-            self._movies.append(movie)
+            insort_left(self._movies, movie)
             self._movies_ids[movie.ID] = movie
         else:
-            raise KeyError
+            pass
 
     def get_movie(self, id):
         movie = None
@@ -36,6 +38,13 @@ class MemoryRepository(AbstractRepository):
         except KeyError:
             pass
         return movie
+
+    def get_movies_by_year(self, target_year):
+        matching_movies = list()
+        for movie in self._movies:
+            if movie.release_year == target_year:
+                insort_left(matching_movies, movie)
+        return matching_movies
 
     def get_number_of_movies(self) -> int:
         return len(self._movies)
@@ -48,16 +57,18 @@ class MemoryRepository(AbstractRepository):
 
     def get_movies_by_id(self, ID_list: List[int]):
         movies_by_id = list()
-        for movie in self._movies:
-            if movie.ID in ID_list:
-                movies_by_id.append(movie)
+        for id in ID_list:
+            for movie in self._movies:
+                if movie.ID == id:
+                    movies_by_id.append(movie)
         return movies_by_id
 
     def get_movies_by_title(self, keyword: List[str]) -> List[Movie]:
         movies_by_title = list()
-        for movie in self._movies:
-            if movie.title in keyword:
-                movies_by_title.append(movie)
+        for title in keyword:
+            for movie in self._movies:
+                if movie.title == title:
+                    movies_by_title.append(movie)
         return movies_by_title
 
     def get_movies_by_director(self, target_director: Director) -> List[Movie]:
@@ -115,8 +126,36 @@ class MemoryRepository(AbstractRepository):
                 low_to_high_movies.append(lowest)
         return low_to_high_movies
 
-    def get_title_of_previous_movie(self, movie: Movie):
-        pass
+    def get_year_of_previous_movie(self, movie: Movie):
+        previous_year = None
 
-    def get_title_of_next_movie(self, movie: Movie):
-        pass
+        try:
+            index = self.movie_index(movie)
+            for stored_movie in reversed(self._movies[0:index]):
+                if stored_movie < movie:
+                    previous_year = stored_movie.release_year
+                    break
+        except ValueError:
+            pass
+
+        return previous_year
+
+    def get_year_of_next_movie(self, movie: Movie):  # alphabetically
+        next_year = None
+
+        try:
+            index = self.movie_index(movie)
+            for stored_movie in self._movies[index + 1:len(self._movies)]:
+                if stored_movie < movie:
+                    next_year = stored_movie.year
+                    break
+        except ValueError:
+            pass
+
+        return next_year
+
+    def movie_index(self, movie: Movie):
+        index = bisect_left(self._movies, movie)
+        if index != len(self._movies) and self._movies[index].ID == movie.ID:
+            return index
+        raise ValueError

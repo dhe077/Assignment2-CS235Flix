@@ -1,10 +1,10 @@
 import abc
 from typing import List
-from domainmodel.movie import Movie
-from domainmodel.user import User
-from domainmodel.director import Director
-from domainmodel.genre import Genre
-from domainmodel.actor import Actor
+from CS235Flix.domainmodel.movie import Movie
+from CS235Flix.domainmodel.user import User
+from CS235Flix.domainmodel.director import Director
+from CS235Flix.domainmodel.genre import Genre
+from CS235Flix.domainmodel.actor import Actor
 
 
 repo_instance = None
@@ -38,6 +38,12 @@ class AbstractRepository(abc.ABC):
     def get_movie(self, title) -> Movie:
         """ Returns the Movie named title from the repository.
             If there is no Movie with the given title, this method returns None. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_movies_by_year(self, target_year: int) -> List[Movie]:
+        """ Returns a list of Movies that were published on the target_year.
+            If there are no Movies for the given target_year, this method returns an empty list. """
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -100,13 +106,13 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_title_of_previous_movie(self, movie: Movie):
-        """ Returns the title of the Movie that immediately precedes movie.
+    def get_year_of_previous_movie(self, movie: Movie):
+        """ Returns the release year of the Movie that immediately precedes movie.
             If movie is the first Movie in the repository, this method returns None. """
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_title_of_next_movie(self, movie: Movie):
-        """ Returns the title of the Movie that immediately follows movie.
+    def get_year_of_next_movie(self, movie: Movie):
+        """ Returns the release year of the Movie that immediately follows movie.
             If movie is the first Movie in the repository, this method returns None. """
         raise NotImplementedError

@@ -1,10 +1,10 @@
 import pytest
-from domainmodel.memory_repository import MemoryRepository
-from domainmodel.movie import Movie
-from domainmodel.user import User
-from domainmodel.director import Director
-from domainmodel.genre import Genre
-from domainmodel.actor import Actor
+from CS235Flix.repositorydir.memory_repository import MemoryRepository
+from CS235Flix.domainmodel.movie import Movie
+from CS235Flix.domainmodel.user import User
+from CS235Flix.domainmodel.director import Director
+from CS235Flix.domainmodel.genre import Genre
+from CS235Flix.domainmodel.actor import Actor
 
 
 def test_repository_can_add_user():
@@ -53,6 +53,19 @@ def test_cannot_add_movie_with_non_unique_id():
     assert mem_repo.get_number_of_movies() == 1
 
 
+def test_repository_can_add_movie_alhpa():
+    mem_repo = MemoryRepository()
+    up_movie = Movie("Up", 2009, 1)
+    klaus_movie = Movie("Klaus", 2019, 2)
+    dolittle_movie = Movie("Dolittle", 2019, 3)
+    mem_repo.add_movie(up_movie)
+    mem_repo.add_movie(klaus_movie)
+    mem_repo.add_movie(dolittle_movie)
+
+    assert mem_repo.get_number_of_movies() == 3
+    assert mem_repo.get_first_movie() is dolittle_movie
+
+
 def test_repository_can_retrieve_movie():
     mem_repo = MemoryRepository()
     movie = Movie("Up", 2009, 1)
@@ -92,6 +105,7 @@ def test_repository_can_get_movies_by_id():
     mem_repo.add_movie(up_movie)
     mem_repo.add_movie(klaus_movie)
     mem_repo.add_movie(dolittle_movie)
+    # ["Dolittle", "Klaus", "Up"]
     movies_by_id = mem_repo.get_movies_by_id([1, 2, 3])
 
     assert len(movies_by_id) == 3
@@ -121,6 +135,7 @@ def test_repository_can_get_movies_by_title():
     mem_repo.add_movie(up_movie)
     mem_repo.add_movie(klaus_movie)
     mem_repo.add_movie(dolittle_movie)
+    # ["Dolittle", "Klaus", "Up"]
     movies_by_title = mem_repo.get_movies_by_title(["Up", "Klaus", "Dolittle"])
 
     assert len(movies_by_title) == 3
@@ -156,7 +171,7 @@ def test_repository_can_get_movies_by_director():
     movies_by_director = mem_repo.get_movies_by_director(Director("Pete Docter"))
 
     assert len(movies_by_director) == 2
-    assert movies_by_director == [up_movie, inside_out_movie]
+    assert movies_by_director == [inside_out_movie, up_movie]
 
 
 def test_repository_does_not_retrieve_a_non_existent_director():
@@ -191,7 +206,7 @@ def test_repository_can_get_movies_by_genre():
     movies_by_genre = mem_repo.get_movies_by_genre(Genre("Comedy"))
 
     assert len(movies_by_genre) == 2
-    assert movies_by_genre == [up_movie, dolittle_movie]
+    assert movies_by_genre == [dolittle_movie, up_movie]
 
 
 def test_repository_does_not_retrieve_a_non_existent_genre():
@@ -226,7 +241,7 @@ def test_repository_can_get_movies_by_actor():
     movies_by_actor = mem_repo.get_movies_by_actor(Actor("Robert Downey, Jr."))
 
     assert len(movies_by_actor) == 2
-    assert movies_by_actor == [the_avengers_movie, dolittle_movie]
+    assert movies_by_actor == [dolittle_movie, the_avengers_movie]
 
 
 def test_repository_does_not_retrieve_a_non_existent_actor():
@@ -279,3 +294,31 @@ def test_repository_can_get_movies_by_rating_low_to_high():
 
     assert len(movies_by_low_to_high) == 3
     assert movies_by_low_to_high == [dolittle_movie, up_movie, klaus_movie]
+
+
+def test_repository_returns_year_of_previous_movie():
+    mem_repo = MemoryRepository()
+    up_movie = Movie("Up", 2009, 1)
+    klaus_movie = Movie("Klaus", 2019, 2)
+    dolittle_movie = Movie("Dolittle", 2019, 3)
+    mem_repo.add_movie(up_movie)
+    mem_repo.add_movie(klaus_movie)
+    mem_repo.add_movie(dolittle_movie)
+    # ["Dolittle", "Klaus", "Up"]
+    previous_year = mem_repo.get_year_of_previous_movie(klaus_movie)
+
+    assert previous_year == 2019
+
+
+def test_repository_returns_year_of_next_movie():
+    mem_repo = MemoryRepository()
+    up_movie = Movie("Up", 2009, 1)
+    klaus_movie = Movie("Klaus", 2019, 2)
+    dolittle_movie = Movie("Dolittle", 2019, 3)
+    mem_repo.add_movie(up_movie)
+    mem_repo.add_movie(klaus_movie)
+    mem_repo.add_movie(dolittle_movie)
+    # ["Dolittle", "Klaus", "Up"]
+    previous_year = mem_repo.get_year_of_previous_movie(klaus_movie)
+
+    assert previous_year == 2019

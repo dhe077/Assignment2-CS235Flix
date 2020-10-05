@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from domainmodel.movie import Movie
+from CS235Flix.domainmodel.movie import Movie
 
 
 class Review:

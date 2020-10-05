@@ -1,6 +1,6 @@
-from domainmodel.genre import Genre
-from domainmodel.actor import Actor
-from domainmodel.director import Director
+from CS235Flix.domainmodel.genre import Genre
+from CS235Flix.domainmodel.actor import Actor
+from CS235Flix.domainmodel.director import Director
 
 
 class Movie:
@@ -128,6 +128,14 @@ class Movie:
     @ID.setter
     def ID(self, new_ID: int):
         self.__ID = new_ID
+
+    @property
+    def release_year(self) -> int:
+        return self.__release_year
+
+    @release_year.setter
+    def release_year(self, new_release_year: int):
+        self.__release_year = new_release_year
 
     # add external rating, rating votes, revenue and meta scores as extra
 
