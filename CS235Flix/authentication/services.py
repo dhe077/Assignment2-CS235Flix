@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from CS235Flix.repositorydir import AbstractRepository
+from CS235Flix.repositorydir.repository import AbstractRepository
 from CS235Flix.domainmodel.user import User
 
 

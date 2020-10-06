@@ -128,30 +128,24 @@ class MemoryRepository(AbstractRepository):
 
     def get_year_of_previous_movie(self, movie: Movie):
         previous_year = None
-
-        try:
-            index = self.movie_index(movie)
-            for stored_movie in reversed(self._movies[0:index]):
-                if stored_movie < movie:
-                    previous_year = stored_movie.release_year
-                    break
-        except ValueError:
-            pass
-
+        previous_year_list = list()
+        if self.movie_index(movie) < len(self._movies):
+            for search_movie in self._movies:
+                if search_movie.release_year < movie.release_year and search_movie.ID != movie.ID:
+                    insort_left(previous_year_list, search_movie.release_year)
+            if len(previous_year_list) > 0:
+                previous_year = previous_year_list[-1]
         return previous_year
 
     def get_year_of_next_movie(self, movie: Movie):  # alphabetically
         next_year = None
-
-        try:
-            index = self.movie_index(movie)
-            for stored_movie in self._movies[index + 1:len(self._movies)]:
-                if stored_movie < movie:
-                    next_year = stored_movie.year
-                    break
-        except ValueError:
-            pass
-
+        next_year_list = list()
+        if self.movie_index(movie) < len(self._movies):
+            for search_movie in self._movies:
+                if search_movie.release_year > movie.release_year and search_movie.ID != movie.ID:
+                    insort_left(next_year_list, search_movie.release_year)
+            if len(next_year_list) > 0:
+                next_year = next_year_list[0]
         return next_year
 
     def movie_index(self, movie: Movie):

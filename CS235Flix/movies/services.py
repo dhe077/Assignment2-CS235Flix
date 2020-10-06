@@ -1,6 +1,6 @@
 from typing import List, Iterable
 
-from CS235Flix.repositorydir import AbstractRepository
+from CS235Flix.repositorydir.repository import AbstractRepository
 from CS235Flix.domainmodel.movie import Movie
 
 
