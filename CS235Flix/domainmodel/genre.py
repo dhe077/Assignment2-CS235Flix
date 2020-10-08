@@ -6,10 +6,15 @@ class Genre:
             self.__genre_name = None
         else:
             self.__genre_name = genre.strip()
+        self.__related_movies = list()
 
     @property
     def genre_name(self) -> str:
         return self.__genre_name
+
+    @property
+    def related_movies(self) -> list:
+        return self.__related_movies
 
     def __repr__(self):
         return f"<Genre {self.__genre_name}>"
@@ -27,24 +32,10 @@ class Genre:
     def __hash__(self):
         return hash(self.genre_name)
 
+    def is_applied_to(self, movie) -> bool:
+        return movie in self.__related_movies
 
-class TestGenreMethods:
+    def add_related_movie(self, movie):
+        self.__related_movies.append(movie)
 
-    def test_init(self):
-        genre1 = Genre("Comedy")
-        assert repr(genre1) == "<Genre Comedy>"
-        genre2 = Genre("")
-        assert genre2.genre_name is None
-        genre3 = Genre(42)
-        assert genre3.genre_name is None
 
-    def test_lt(self):
-        genre1 = Genre("Comedy")
-        genre4 = Genre("Horror")
-        genre_list = [genre4, genre1]
-        genre_list.sort()
-        assert genre_list[1] == genre4 and genre_list[0] == genre1
-        genre5 = Genre("Comedian")
-        genre_list2 = [genre1, genre5]
-        genre_list2.sort()
-        assert genre_list2[0] == genre5 and genre_list2[1] == genre1

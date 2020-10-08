@@ -35,14 +35,3 @@ class Actor:
         if colleague in self.colleagues:
             return True
         return False
-
-
-class TestActorMethods:
-
-    def test_init(self):
-        actor1 = Actor("Angelina Jolie")
-        print(actor1)
-        actor2 = Actor("")
-        print(actor2)
-        actor3 = Actor(42)
-        print(actor3)

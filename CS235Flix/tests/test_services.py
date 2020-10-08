@@ -6,6 +6,8 @@ from CS235Flix.authentication.services import AuthenticationException
 from CS235Flix.movies import services as movie_services
 from CS235Flix.authentication import services as auth_services
 from CS235Flix.domainmodel.movie import Movie
+from CS235Flix.domainmodel.user import User
+# from CS235Flix.domainmodel.model import Movie, Actor, Review, Director, Genre, User
 
 
 def test_can_add_user():
@@ -47,6 +49,33 @@ def test_authentication_with_invalid_credentials():
     auth_services.add_user(new_user_name, new_password, mem_repo)
     with pytest.raises(auth_services.AuthenticationException):
         auth_services.authenticate_user(new_user_name, '0987654321', mem_repo)
+
+
+def test_can_add_review():
+    mem_repo = MemoryRepository()
+    up_movie = Movie("Up", 2009, 1)
+    klaus_movie = Movie("Klaus", 2019, 2)
+    dolittle_movie = Movie("Dolittle", 2019, 3)
+    mem_repo.add_movie(up_movie)
+    mem_repo.add_movie(klaus_movie)
+    mem_repo.add_movie(dolittle_movie)
+    # ["Dolittle", "Klaus", "Up"]
+    movie_id = 3
+    review_text = "Very good!"
+    username = "jumanji"
+    rating = 5
+    mem_repo.add_user(User(username, "CS235"))
+
+    # call the service layer to add the comment
+    movie_services.add_review(movie_id, review_text, rating, username, mem_repo)
+
+    # retrieve the reviews for the movie from the repository
+    reviews_as_dict = movie_services.get_reviews_for_movie(movie_id, mem_repo)
+
+    # check that the reviews inclue a review with the new review text.
+    assert next(
+        (dictionary['review_text'] for dictionary in reviews_as_dict if dictionary['review_text'] == review_text),
+        None) is not None
 
 
 def test_can_get_movie():

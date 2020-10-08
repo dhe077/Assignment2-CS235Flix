@@ -6,6 +6,8 @@ from CS235Flix.domainmodel.user import User
 from CS235Flix.domainmodel.director import Director
 from CS235Flix.domainmodel.genre import Genre
 from CS235Flix.domainmodel.actor import Actor
+from CS235Flix.domainmodel.review import Review
+from CS235Flix.datafilereaders.movie_file_csv_reader import MovieFileCSVReader
 from CS235Flix.repositorydir.repository import AbstractRepository, RepositoryException
 
 
@@ -15,6 +17,8 @@ class MemoryRepository(AbstractRepository):
         self._movies = list()
         self._movies_ids = dict()
         self._users = list()
+        self._reviews = list()
+        self._genres = list()
 
     def add_user(self, user: User):
         self._users.append(user)
@@ -62,6 +66,15 @@ class MemoryRepository(AbstractRepository):
                 if movie.ID == id:
                     movies_by_id.append(movie)
         return movies_by_id
+
+    def get_movie_ids_for_genre(self, genre_name: str):
+        genre = next((genre for genre in self._genres if genre.genre_name == genre_name), None)
+
+        if genre is not None:
+            movie_ids = [movie.ID for movie in genre.related_movies]
+        else:
+            movie_ids = list()
+        return movie_ids
 
     def get_movies_by_title(self, keyword: List[str]) -> List[Movie]:
         movies_by_title = list()
@@ -148,8 +161,26 @@ class MemoryRepository(AbstractRepository):
                 next_year = next_year_list[0]
         return next_year
 
+    def add_genre(self, genre: Genre):
+        if genre not in self._reviews:
+            self._reviews.append(genre)
+
+    def get_genre(self) -> List[Genre]:
+        return self._reviews
+
+    def add_review(self, review: Review):
+        self._reviews.append(review)
+
+    def get_reviews(self):
+        return self._reviews
+
     def movie_index(self, movie: Movie):
         index = bisect_left(self._movies, movie)
         if index != len(self._movies) and self._movies[index].ID == movie.ID:
             return index
         raise ValueError
+
+
+def populate(data_path: str):
+    movie_file_reader = MovieFileCSVReader(data_path)
+    movie_file_reader.read_csv_file()

@@ -307,7 +307,7 @@ def test_repository_returns_year_of_previous_movie():
     # ["Dolittle", "Klaus", "Up"]
     previous_year = mem_repo.get_year_of_previous_movie(klaus_movie)
 
-    assert previous_year == 2019
+    assert previous_year == 2009
 
 
 def test_repository_returns_year_of_next_movie():
@@ -319,6 +319,6 @@ def test_repository_returns_year_of_next_movie():
     mem_repo.add_movie(klaus_movie)
     mem_repo.add_movie(dolittle_movie)
     # ["Dolittle", "Klaus", "Up"]
-    previous_year = mem_repo.get_year_of_previous_movie(klaus_movie)
+    next_year = mem_repo.get_year_of_next_movie(klaus_movie)
 
-    assert previous_year == 2019
+    assert next_year is None

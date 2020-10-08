@@ -5,6 +5,7 @@ from CS235Flix.domainmodel.user import User
 from CS235Flix.domainmodel.director import Director
 from CS235Flix.domainmodel.genre import Genre
 from CS235Flix.domainmodel.actor import Actor
+from CS235Flix.domainmodel.review import Review
 
 
 repo_instance = None
@@ -70,6 +71,12 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def get_movie_ids_for_genre(self, genre_name: str):
+        """ Returns a list of ids representing Movies that have the genres in genre_name.
+            If there are no movies that have genre_name, this method returns an empty list."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def get_movies_by_title(self, title_list: List[str]) -> List[Movie]:
         """ Returns a list of Movies, whose titles match those in the title_list, from the repository.
             If there are no matches, this method returns an empty list. """
@@ -115,4 +122,24 @@ class AbstractRepository(abc.ABC):
     def get_year_of_next_movie(self, movie: Movie):
         """ Returns the release year of the Movie that immediately follows movie.
             If movie is the first Movie in the repository, this method returns None. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_genre(self, genre: Genre):
+        """ Adds a Genre to the repository. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_genre(self) -> List[Genre]:
+        """ Returns the Genres stored in the repository. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_review(self, review: Review):
+        """ Adds a Review to the repository. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_reviews(self):
+        """ Returns the Reviews stored in the repository. """
         raise NotImplementedError
