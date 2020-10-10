@@ -21,7 +21,7 @@ movies_blueprint = Blueprint('movies_bp', __name__)
 @movies_blueprint.route('/movies_by_year', methods=['GET'])
 def movies_by_year():
     # read query params
-    target_year = reuqest.args.get('release_year')
+    target_year = request.args.get('release_year')
     movie_to_show_reviews = request.args.get('view_reviews_for')
 
     # fetch the first and last movies in the series
@@ -52,25 +52,25 @@ def movies_by_year():
         # there's at least one movie for the target year
         if previous_year is not None:
             # there are movies on a previous year, so generate URLs for the 'previous' and 'first' navigation buttons.
-            prev_movie_url = url_for('movies_bp.movies_by_year', year=previous_year.isoformat())
-            first_movie_url = url_for('movies_bp.movies_by_year', year=first_movie['release_year'].isoformat())
+            prev_movie_url = url_for('movies_bp.movies_by_year', year=previous_year)
+            first_movie_url = url_for('movies_bp.movies_by_year', year=first_movie['release_year'])
 
         # there are movies on a subsequent year, so generate URLs for the 'next' and 'last' navigation buttons
         if next_year is not None:
-            next_movie_url = url_for('movies_bp.movies_by_year', year=next_year.isoformat())
-            last_movie_url = url_for('movies_bp.movies_by_year', year=last_movie['release_year'].isoformat())
+            next_movie_url = url_for('movies_bp.movies_by_year', year=next_year)
+            last_movie_url = url_for('movies_bp.movies_by_year', year=last_movie['release_year'])
 
         # construct urls for viewing movie reviews and adding reviews
         for movie in movies:
             movie['view_review_url'] = url_for('movies_bp.movies_by_year', year=target_year,
                                                view_reviews_for=movie['ID'])
-            movie['add_review_url'] = url_for('movies_bp.review_on_movie', movie=movie['ID'])
+            movie['add_review_url'] = url_for('movies_bp.review_movie', movie=movie['ID'])
 
         # generate the webpage to display the movies
         return render_template(
             'movies/movies.html',
             title='Movies',
-            movies_title=target_year.strftime('%A %B %e %Y'),
+            movies_title=target_year,
             movies=movies,
             selected_movies=utilities.get_selected_movies(len(movies) * 2),
             genre_urls=utilities.get_genres_and_urls(),
@@ -141,7 +141,7 @@ def movies_by_genre():
 
     # generate the webpage to display the movies
     return render_template(
-        'news/movies.html',
+        'movies_blueprint/movies.html',
         title='Movies',
         movies_title='Movies with the genre' + genre_name,
         movies=movies,

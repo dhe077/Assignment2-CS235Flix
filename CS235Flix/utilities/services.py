@@ -1,8 +1,15 @@
 import random
 from typing import List, Iterable
 
-from CS235Flix.repositorydir import AbstractRepository
+from CS235Flix.repositorydir.repository import AbstractRepository
 from CS235Flix.domainmodel.movie import Movie
+
+
+def get_genre_names(repo: AbstractRepository):
+    genres = repo.get_genres()
+    genre_names = [genre.genre_name for genre in genres]
+
+    return genre_names
 
 
 def get_random_movies(quantity, repo: AbstractRepository):
@@ -13,7 +20,8 @@ def get_random_movies(quantity, repo: AbstractRepository):
 
     # pick distinct and random movies
     random_ids = random.sample(range(1, movie_count), quantity)
-    movies = repo.get_articles_by_id(random_ids)
+    movies = repo.get_movies_by_id(random_ids)
+    return movies_to_dict(movies)
 
 
 # ============================================

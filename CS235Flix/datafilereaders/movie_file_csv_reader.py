@@ -1,4 +1,5 @@
 import csv
+import os
 
 from CS235Flix.domainmodel.movie import Movie
 from CS235Flix.domainmodel.actor import Actor
@@ -9,7 +10,7 @@ from CS235Flix.domainmodel.director import Director
 class MovieFileCSVReader:
 
     def __init__(self, file_name: str):
-        self.__file_name = file_name
+        self.__file_name = os.path.join(file_name, 'Data1000Movies.csv')
         self.__dataset_of_movies = []
         self.__dataset_of_actors = set()
         self.__dataset_of_directors = set()
@@ -46,7 +47,8 @@ class MovieFileCSVReader:
                 votes = row['Votes']
                 revenue = row['Revenue (Millions)']
                 metascore = row['Metascore']
-                movie = Movie(title, release_year)
+
+                movie = Movie(title, release_year, index + 1)
                 movie.director = director
                 # extension attribute application
                 movie.external_rating = rating
@@ -74,4 +76,3 @@ class MovieFileCSVReader:
                 self.__dataset_of_movies.append(movie)
                 index += 1
 
-                # print(f"Movie {index} with title: {title}, release year {release_year}")

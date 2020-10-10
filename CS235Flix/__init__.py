@@ -16,7 +16,7 @@ def create_app(test_config=None):
 
     # Configure the app from configuration-file settings.
     app.config.from_object('config.Config')
-    data_path = os.path.join('CS235Flix', 'repositorydir', 'datafiles')
+    data_path = os.path.join('CS235Flix', 'datafiles')
 
     if test_config is not None:
         # Load test configuration, and overrride any configuration settings.
@@ -33,8 +33,8 @@ def create_app(test_config=None):
         from .home import home
         app.register_blueprint(home.home_blueprint)
 
-        from .news import news
-        app.register_blueprint(news.news_blueprint)
+        from .movies import movie_blueprint
+        app.register_blueprint(movie_blueprint.movies_blueprint)
 
         from .authentication import authentication
         app.register_blueprint(authentication.authentication_blueprint)

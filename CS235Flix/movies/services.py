@@ -17,7 +17,7 @@ class UnknownUserException(Exception):
 
 
 def add_review(movie_id: int, review_text: str, rating: int, username: str, repo: AbstractRepository):
-    # check that the article exists.
+    # check that the movie exists.
     movie = repo.get_movie(movie_id)
     if movie is None:
         raise NonExistentMovieException

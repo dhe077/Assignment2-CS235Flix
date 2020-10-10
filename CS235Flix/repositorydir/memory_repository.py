@@ -165,7 +165,7 @@ class MemoryRepository(AbstractRepository):
         if genre not in self._reviews:
             self._reviews.append(genre)
 
-    def get_genre(self) -> List[Genre]:
+    def get_genres(self) -> List[Genre]:
         return self._reviews
 
     def add_review(self, review: Review):
@@ -181,6 +181,11 @@ class MemoryRepository(AbstractRepository):
         raise ValueError
 
 
-def populate(data_path: str):
+def populate(data_path: str, repo: AbstractRepository):
     movie_file_reader = MovieFileCSVReader(data_path)
     movie_file_reader.read_csv_file()
+    for movie in movie_file_reader.dataset_of_movies:
+        repo.add_movie(movie)
+    for genre in movie_file_reader.dataset_of_genres:
+        repo.add_genre(genre)
+
