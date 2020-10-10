@@ -13,14 +13,13 @@ def test_repository_can_add_user():
     mem_repo.add_user(user)
 
     assert mem_repo.get_user("Jimmy") is user
-    assert mem_repo.get_user("jimmy") is user
 
 
 def test_repository_can_get_user():
     mem_repo = MemoryRepository()
     user = User("Terry", "42069")
     mem_repo.add_user(user)
-    got_user = mem_repo.get_user("terry")
+    got_user = mem_repo.get_user("Terry")
 
     assert got_user == user
 

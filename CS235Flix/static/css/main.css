@@ -64,7 +64,7 @@ img {
 }
 
 .btn-general-disabled {
-    background-color: #140626;
+    background-color: #401273;
     border: none;
     border-radius: 8px;
     display: inline-block;
@@ -76,7 +76,7 @@ img {
 
 .btn-general:hover {
     background-color: #4e32cd;
-    color: black;
+    color: #7c31b5;
 }
 
 .textarea {

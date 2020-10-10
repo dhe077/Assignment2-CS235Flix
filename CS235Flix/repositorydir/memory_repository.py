@@ -25,7 +25,7 @@ class MemoryRepository(AbstractRepository):
 
     def get_user(self, username):
         for user in self._users:
-            if user.user_name == username.lower():
+            if user.user_name == username:
                 return user
 
     def add_movie(self, movie: Movie):

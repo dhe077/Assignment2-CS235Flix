@@ -8,7 +8,7 @@ class User:
         if user_name == "" or type(user_name) is not str:
             self.__user_name = None
         else:
-            self.__user_name = user_name.strip().lower()
+            self.__user_name = user_name.strip()
         if password == "" or type(password) is not str:
             self.__password = None
         else:

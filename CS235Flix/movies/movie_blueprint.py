@@ -112,7 +112,7 @@ def movies_by_genre():
     movie_ids = services.get_movie_ids_for_genre(genre_name, repo.repo_instance)
 
     # retrieve the batch of movies to display on the web page
-    movies = services.get_movies_by_id(movie_ids[cursor:cursor + movies_per_page], repo.repo_instance)
+    movies = services.get_movies_by_ids(movie_ids[cursor:cursor + movies_per_page], repo.repo_instance)
 
     first_movie_url = None
     last_movie_url = None
@@ -141,12 +141,12 @@ def movies_by_genre():
 
     # generate the webpage to display the movies
     return render_template(
-        'movies_blueprint/movies.html',
+        'movies/movies.html',
         title='Movies',
-        movies_title='Movies with the genre' + genre_name,
+        movies_title='Movies with the genre: ' + genre_name,
         movies=movies,
         selected_movies=utilities.get_selected_movies(len(movies) * 2),
-        genre_urls=utilities.get_genre_and_urls(),
+        genre_urls=utilities.get_genres_and_urls(),
         first_movie_url=first_movie_url,
         last_movie_url=last_movie_url,
         prev_movie_url=prev_movie_url,
@@ -170,7 +170,7 @@ def review_movie():
         movie_id = int(form.movie_id.data)
 
         # use the service layer to store the new review
-        services.add_review(movie_id, form.review.data, username, repo.repo_instance)
+        services.add_review(movie_id, form.review.data, username, 0, repo.repo_instance)
 
         # retrieve the movie in dict form.
         movie = services.get_movie(movie_id, repo.repo_instance)
@@ -201,7 +201,7 @@ def review_movie():
         form=form,
         handler_url=url_for('movies_bp.review_movie'),
         selected_movies=utilities.get_selected_movies(),
-        genre_urls=utilities.get_genre_and_urls()
+        genre_urls=utilities.get_genres_and_urls()
     )
 
 

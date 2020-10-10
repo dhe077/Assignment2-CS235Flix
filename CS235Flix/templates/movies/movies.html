@@ -36,26 +36,21 @@
 
     {% for movie in movies %}
     <movie id="movie">
-        <a href="{{movie.hyperlink}}" target="_blank">
-            <img src={{movie.image_hyperlink}} alt="movieimage">
+        <a target="_blank">
+            <img src="static\dagger.png" alt="movie_image">
         </a>
         <h2>{{movie.title}}</h2>
         <p>{{movie.first_para}}</p>
-        <div style="float:left">
-            {% for tag in movie.tags %}
-            <button class="btn-general" onclick="location.href='{{ tag_urls[tag.name] }}'">{{ tag.name }}</button>
-            {% endfor %}
-        </div>
         <div style="float:right">
-            {% if movie.comments|length > 0 and movie.id != show_comments_for_movie %}
-                <button class="btn-general" onclick="location.href='{{ movie.view_comment_url }}'">{{ movie.comments|length }} comments</button>
+            {% if movie.reviews|length > 0 and movie.id != show_reviews_for_movie %}
+                <button class="btn-general" onclick="location.href='{{ movie.view_review_url }}'">{{ movie.reviews|length }} Reviews</button>
             {% endif %}
-            <button class="btn-general" onclick="location.href='{{ movie.add_comment_url }}'">Comment</button>
+            <button class="btn-general" onclick="location.href='{{ movie.add_review_url }}'">Review</button>
         </div>
-        {% if movie.id == show_comments_for_movie %}
+        {% if movie.id == show_reviews_for_movie %}
         <div style="clear:both">
-            {% for comment in movie.comments %}
-                <p>{{comment.comment_text}}, by {{comment.username}}, {{comment.timestamp}}</p>
+            {% for review in movie.reviews %}
+                <p>{{review.review_text}}, by {{review.username}}, {{review.timestamp}}</p>
             {% endfor %}
         </div>
         {% endif %}

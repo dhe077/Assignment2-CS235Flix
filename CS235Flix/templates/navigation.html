@@ -18,6 +18,13 @@
     </h3>
   </div>
 
+  <div>
+    <h3 id="sub-nav-header">Browse by genre</h3>
+    {% for key in genre_urls %}
+      <a class="btn-nav" href="{{ genre_urls[key] }}">{{ key }}</a>
+    {% endfor %}
+  </div>
+
   <div id="nav-footer">
     COMPSCI 235 Software Development Methodologies
   </div>
